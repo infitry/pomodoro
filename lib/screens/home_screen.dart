@@ -16,14 +16,18 @@ class _HomeScreenState extends State<HomeScreen> {
   int totalPomodoro = 0;
   late Timer timer;
 
+  void reset() {
+    setState(() {
+      totalSeconds = twentyFiveMinutes;
+      isRunning = false;
+    });
+    timer.cancel();
+  }
+
   void onTick(Timer timer) {
     if (totalSeconds == 0) {
-      setState(() {
-        totalPomodoro = totalPomodoro + 1;
-        totalSeconds = twentyFiveMinutes;
-        isRunning = false;
-      });
-      timer.cancel();
+      reset();
+      totalPomodoro = totalPomodoro + 1;
     } else {
       setState(() {
         totalSeconds = totalSeconds - 1;
@@ -80,15 +84,27 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Flexible(
-            flex: 3,
+            flex: 2,
             child: Center(
-              child: IconButton(
-                iconSize: 120,
-                color: Theme.of(context).cardColor,
-                onPressed: isRunning ? onPausePressed : onStartPressed,
-                icon: Icon(isRunning
-                    ? Icons.pause_circle_outline
-                    : Icons.play_circle_outline),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    iconSize: 120,
+                    color: Theme.of(context).cardColor,
+                    onPressed: isRunning ? onPausePressed : onStartPressed,
+                    icon: Icon(isRunning
+                        ? Icons.pause_circle_outline
+                        : Icons.play_circle_outline),
+                  ),
+                  IconButton(
+                      onPressed: reset,
+                      icon: Icon(
+                        Icons.cached,
+                        size: 50,
+                        color: Theme.of(context).cardColor,
+                      )),
+                ],
               ),
             ),
           ),
